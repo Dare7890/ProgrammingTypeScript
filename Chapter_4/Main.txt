@@ -1,0 +1,57 @@
+Глава 4. Функции.
+
+Необязательные параметры обозначаются при помощи ? и идут после обязательных.
+Оставшиеся параметры - массив аргументов, которые передаются в функцию в виде массива. Преимущества использования его в ts в том, что массив строготипизирован. Используются ...
+
+function sumVariadicSafe(...numbers: number[]): number {
+ return numbers.reduce((total, n) => total + n, 0)
+}
+
+sumVariadicSafe(1, 2, 3)
+
+При использовании ключевого слова this в функциях можно указать его в качестве первого параметра с уточнением типа, тогда ts будет следить за корректностью.
+
+Еще 1 вариант определения сигнатуры функции - (a: number, b: number) => number
+
+type Sum = (a: number, b: number) => number - скоращенная сигнатура
+type Sum = {
+    (a: number, b: number): number
+}
+let sum: Sum = (a, b) => a + b;
+
+callback - функция, которая в виде параметра принимает другую функцию и вызывает ее внутри себя.
+
+Перегрузка функций:
+Достигается путем указания в типе нескольких сигнатур функций: 
+type Reserve = {
+    (from: Date, to: Date, destination: string): string | undefined
+    (from: Date, destination: string): string | undefined
+}
+И при определении функции уже указывается комбинированная сигнатура.
+let reserve: Reserve = (from: Date, to: Date | string, destination?: string): string | undefined=> {
+    return destination;
+};
+
+Можно делать проверки параметров на принадлежность типам для того, чтобы реализовывать разные варианты функции.
+let reserve: Reserve = ( 
+ from: Date,
+ toOrDestination: Date | string, 
+ destination?: string
+) => {
+ if (toOrDestination instanceof Date && destination !== undefined) {
+ // Book a one-way trip
+ } else if (typeof toOrDestination === 'string') {
+ // Book a round trip
+ }
+}
+
+Обобщения.
+type Filter = {
+ <T>(array: T[], f: (item: T) => boolean): T[]
+}
+
+T - параметр обобщенного типа. TS делает вывод о типе T исходя из переданных аргументов.
+
+function show<T extends People>(people: T) - в качестве параметра можно передать только тот тип, который является People или его наследником.
+
+Для задания нескольких ограничений можно расширить тип у extends. То есть все те свойства или методы, которые нужны в обобщенном методе, мы присваиваем типу, который будет участвовать в extends.
