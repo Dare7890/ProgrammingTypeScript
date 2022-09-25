@@ -1,0 +1,22 @@
+1) Короткая запись объявляение полей класса и инициализация их в конструкторе:
+
+class Position {
+    constructor(
+        private fiel: Fiel,
+        private rank: Rank
+    ){ };
+}
+
+Эквивалентно
+
+class Position {
+    private fiel: Fiel;
+    private rank: Rank;
+
+    constructor(fiel: Fiel, rank: Rank) {
+        this.fiel = fiel;
+        this.rank = rank;
+     };
+}
+
+2) Если тип имеет конечное количество значений, то удобно воспользоваться type и перечислить их.
